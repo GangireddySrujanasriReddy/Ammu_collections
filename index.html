@@ -5,122 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body { margin:0; font-family:Arial; background:#f3f3f3; }
+body{margin:0;font-family:Arial;background:#f3f3f3}
 
 /* NAVBAR */
-.header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#131921;
-  color:white;
-  padding:10px 20px;
+.header{
+display:flex;justify-content:space-between;align-items:center;
+background:#131921;color:white;padding:10px 20px
 }
-.logo img {
-  height:45px;
-  border-radius:50%;
-  cursor:pointer;
+.logo img{height:45px;border-radius:50%;cursor:pointer}
+
+#searchInput{width:40%;padding:10px;border-radius:6px;border:none}
+
+/* GRID */
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:15px;padding:20px
 }
 
-#searchInput {
-  width:40%;
-  padding:10px;
-  border-radius:6px;
-  border:none;
+/* CARD */
+.card{
+background:white;padding:10px;border-radius:8px;
+transition:.3s
 }
+.card:hover{transform:scale(1.03);box-shadow:0 5px 15px rgba(0,0,0,.2)}
+.card img{width:100%;height:140px;object-fit:contain}
 
-/* PRODUCTS */
-.products {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:15px;
-  padding:20px;
-}
-
-.card {
-  background:white;
-  padding:10px;
-  border-radius:8px;
-  transition:0.3s;
-}
-.card:hover {
-  transform:scale(1.03);
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-.card img {
-  width:100%;
-  height:150px;
-  object-fit:contain;
-}
-
-.price { color:#B12704; font-weight:bold; }
-.rating { color:orange; font-size:14px; }
-
-button {
-  background:#ffd814;
-  border:none;
-  padding:8px;
-  margin-top:5px;
-  cursor:pointer;
-  border-radius:4px;
-}
+.price{color:#B12704;font-weight:bold}
+.rating{color:orange;font-size:14px}
+.badge{background:red;color:white;font-size:11px;padding:2px 5px}
 
 /* MODAL */
-.modal {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.6);
-  justify-content:center;
-  align-items:center;
+.modal{
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,.6);
+justify-content:center;align-items:center
 }
 
-/* LOGIN CARD */
-.login-box {
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  width:350px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.3);
-  position:relative;
+.box{
+background:white;padding:20px;border-radius:10px;
+width:90%;max-width:500px;position:relative
 }
 
-.login-box h2 {
-  margin-bottom:15px;
+.close{
+position:absolute;top:10px;right:15px;font-size:18px;cursor:pointer
 }
 
-.login-box input {
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border:1px solid #ccc;
-  border-radius:6px;
-}
-
-.login-btn {
-  width:100%;
-  background:#ff9900;
-  color:white;
-  padding:10px;
-  border-radius:6px;
-}
-
-.close {
-  position:absolute;
-  top:10px;
-  right:15px;
-  font-size:20px;
-  cursor:pointer;
-}
-
-/* CART */
-.cart-box {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:400px;
-}
+input{width:95%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc}
+button{background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer}
 
 </style>
 </head>
@@ -129,46 +61,96 @@ button {
 
 <!-- NAVBAR -->
 <div class="header">
-  <div class="logo">
-    <img src="logo.png" onclick="showProducts(products)">
-  </div>
+<div class="logo">
+<img src="logo.png" onclick="openProductsPopup()">
+</div>
 
-  <input id="searchInput" placeholder="Search..." onkeyup="searchProducts()">
+<input id="searchInput" placeholder="Search..." onkeyup="searchProducts()">
 
-  <div>
-    <button onclick="openLogin()">Login</button>
-    <button onclick="openCart()">🛒 <span id="cartCount">0</span></button>
-  </div>
+<div>
+<button onclick="openSignup()">Signup</button>
+<button onclick="openLogin()">Login</button>
+<button onclick="logout()">Logout</button>
+<button onclick="openOrders()">Orders</button>
+<button onclick="openCart()">🛒 <span id="cartCount">0</span></button>
+<button id="adminBtn" style="display:none" onclick="openAdmin()">Admin</button>
+</div>
 </div>
 
 <!-- PRODUCTS -->
 <div class="products" id="productList"></div>
 
-<!-- LOGIN MODAL -->
-<div class="modal" id="loginModal">
-  <div class="login-box">
-    <span class="close" onclick="closeAll()">❌</span>
-    <h2>Sign in</h2>
-    <input id="luser" placeholder="Email or Username">
-    <input id="lpass" type="password" placeholder="Password">
-    <button class="login-btn" onclick="login()">Sign in</button>
-  </div>
+<!-- PRODUCT POPUP -->
+<div class="modal" id="productModal">
+<div class="box">
+<span class="close" onclick="closeAll()">❌</span>
+<h3>All Products</h3>
+<div class="products" id="popupProducts"></div>
+</div>
 </div>
 
-<!-- CART MODAL -->
+<!-- LOGIN -->
+<div class="modal" id="loginModal">
+<div class="box">
+<span class="close" onclick="closeAll()">❌</span>
+<h3>Login</h3>
+<input id="luser" placeholder="Username">
+<input id="lpass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+</div>
+
+<!-- SIGNUP -->
+<div class="modal" id="signupModal">
+<div class="box">
+<span class="close" onclick="closeAll()">❌</span>
+<h3>Signup</h3>
+<input id="suser" placeholder="Username">
+<input id="spass" type="password" placeholder="Password">
+<button onclick="signup()">Signup</button>
+</div>
+</div>
+
+<!-- CART -->
 <div class="modal" id="cartModal">
-  <div class="cart-box">
-    <span class="close" onclick="closeAll()">❌</span>
-    <h3>Your Cart</h3>
-    <div id="cartItems"></div>
-    <p>Total ₹<span id="total">0</span></p>
-  </div>
+<div class="box">
+<span class="close" onclick="closeAll()">❌</span>
+<h3>Cart</h3>
+<div id="cartItems"></div>
+<p>Total ₹<span id="total">0</span></p>
+<button onclick="checkout()">Checkout</button>
+</div>
+</div>
+
+<!-- ORDERS -->
+<div class="modal" id="ordersModal">
+<div class="box">
+<span class="close" onclick="closeAll()">❌</span>
+<h3>Orders</h3>
+<div id="orders"></div>
+</div>
+</div>
+
+<!-- ADMIN -->
+<div class="modal" id="adminModal">
+<div class="box">
+<span class="close" onclick="closeAll()">❌</span>
+<h3>Add Product</h3>
+<input id="pname" placeholder="Name">
+<input id="pprice" placeholder="Price">
+<input id="pimg" placeholder="Image name">
+<button onclick="addProduct()">Add</button>
+</div>
 </div>
 
 <script>
 
+// STORAGE
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let currentUser = localStorage.getItem("currentUser");
+
 // PRODUCTS
-let products = [
+let products = JSON.parse(localStorage.getItem("products")) || [
 {name:"Lipstick",price:599,img:"lipstick.png"},
 {name:"Kajal",price:299,img:"kajal.png"},
 {name:"Foundation",price:799,img:"foundation.png"},
@@ -183,66 +165,142 @@ let products = [
 
 // DISPLAY
 function showProducts(data){
-  productList.innerHTML="";
-  data.forEach(p=>{
-    productList.innerHTML+=`
-    <div class="card">
-      <img src="${p.img}">
-      <h4>${p.name}</h4>
-      <div class="rating">⭐⭐⭐⭐☆</div>
-      <p class="price">₹${p.price}</p>
-      <button onclick="addToCart('${p.name}',${p.price})">Add</button>
-    </div>`;
-  });
+productList.innerHTML="";
+data.forEach(p=>{
+productList.innerHTML+=`
+<div class="card">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+<div class="rating">⭐⭐⭐⭐☆</div>
+<p class="price">₹${p.price}</p>
+<span class="badge">Deal</span><br>
+<button onclick="addToCart('${p.name}',${p.price})">Add</button>
+</div>`;
+});
 }
 showProducts(products);
 
 // SEARCH
 function searchProducts(){
-  let v=searchInput.value.toLowerCase();
-  showProducts(products.filter(p=>p.name.toLowerCase().includes(v)));
+let v=searchInput.value.toLowerCase();
+showProducts(products.filter(p=>p.name.toLowerCase().includes(v)));
 }
 
-// LOGIN
-let loggedIn=false;
+// POPUP
+function openProductsPopup(){
+productModal.style.display="flex";
+popupProducts.innerHTML="";
+products.forEach(p=>{
+popupProducts.innerHTML+=`
+<div class="card">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+<p class="price">₹${p.price}</p>
+<button onclick="addToCart('${p.name}',${p.price})">Add</button>
+</div>`;
+});
+}
+
+// AUTH
+function signup(){
+if(users[suser.value]) return alert("User exists");
+users[suser.value]={pass:spass.value,cart:[],orders:[]};
+save(); alert("Signup success"); closeAll();
+}
+
 function login(){
-  if(!luser.value || !lpass.value){
-    alert("Enter details");
-    return;
-  }
-  loggedIn=true;
-  alert("Login successful");
-  closeAll();
+if(luser.value==="admin" && lpass.value==="admin123"){
+currentUser="admin";
+adminBtn.style.display="inline";
+alert("Admin login");
+closeAll(); return;
+}
+if(users[luser.value] && users[luser.value].pass===lpass.value){
+currentUser=luser.value;
+localStorage.setItem("currentUser",currentUser);
+alert("Login success"); closeAll();
+}else alert("Invalid");
+}
+
+function logout(){
+currentUser=null;
+localStorage.removeItem("currentUser");
+alert("Logged out");
 }
 
 // CART
-let cart=[];
 function addToCart(name,price){
-  if(!loggedIn){
-    alert("Please login first");
-    return;
-  }
-  cart.push({name,price});
-  cartCount.innerText=cart.length;
+if(!currentUser) return alert("Login first");
+users[currentUser].cart.push({name,price,qty:1});
+save(); updateCart();
 }
 
-// CART VIEW
+function updateCart(){
+if(!currentUser) return;
+cartCount.innerText=users[currentUser].cart.length;
+}
+
 function openCart(){
-  cartModal.style.display="flex";
-  let total=0;
-  cartItems.innerHTML="";
-  cart.forEach(c=>{
-    total+=c.price;
-    cartItems.innerHTML+=`<p>${c.name} ₹${c.price}</p>`;
-  });
-  document.getElementById("total").innerText=total;
+cartModal.style.display="flex";
+let cart=users[currentUser].cart;
+cartItems.innerHTML="";
+let total=0;
+
+cart.forEach((c,i)=>{
+total+=c.price*c.qty;
+cartItems.innerHTML+=`
+<p>${c.name} ₹${c.price}
+<button onclick="inc(${i})">+</button>
+${c.qty}
+<button onclick="dec(${i})">-</button>
+<button onclick="removeItem(${i})">x</button>
+</p>`;
+});
+document.getElementById("total").innerText=total;
+}
+
+function inc(i){users[currentUser].cart[i].qty++;save();openCart();}
+function dec(i){if(users[currentUser].cart[i].qty>1)users[currentUser].cart[i].qty--;save();openCart();}
+function removeItem(i){users[currentUser].cart.splice(i,1);save();openCart();}
+
+// CHECKOUT
+function checkout(){
+users[currentUser].orders.push([...users[currentUser].cart]);
+users[currentUser].cart=[];
+save(); updateCart();
+alert("Payment successful");
+closeAll();
+}
+
+// ORDERS
+function openOrders(){
+ordersModal.style.display="flex";
+orders.innerHTML="";
+users[currentUser]?.orders.forEach(o=>{
+orders.innerHTML+=`<p>${o.map(i=>i.name).join(", ")}</p>`;
+});
+}
+
+// ADMIN
+function openAdmin(){adminModal.style.display="flex";}
+function addProduct(){
+products.push({name:pname.value,price:pprice.value,img:pimg.value});
+localStorage.setItem("products",JSON.stringify(products));
+showProducts(products);
+closeAll();
+}
+
+// SAVE
+function save(){
+localStorage.setItem("users",JSON.stringify(users));
 }
 
 // MODALS
-function openLogin(){ loginModal.style.display="flex"; }
-function closeAll(){
-  document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
-}
+function openLogin(){loginModal.style.display="flex";}
+function openSignup(){signupModal.style.display="flex";}
+function closeAll(){document.querySelectorAll(".modal").forEach(m=>m.style.display="none");}
+
+updateCart();
 
 </script>
 
