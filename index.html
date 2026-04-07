@@ -4,119 +4,134 @@
   <title>Ammu Collections</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #f3f3f3;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f3f3f3;
+}
 
-    /* NAVBAR */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #131921;
-      color: white;
-      padding: 10px 20px;
-      position: sticky;
-      top: 0;
-    }
+/* NAVBAR */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #131921;
+  color: white;
+  padding: 10px 20px;
+}
 
-    .logo img {
-      height: 50px;
-    }
+.logo img {
+  height: 50px;
+  border-radius: 50%; /* 🔥 circle logo */
+}
 
-    #searchInput {
-      width: 40%;
-      padding: 8px;
-    }
+/* SEARCH */
+#searchInput {
+  width: 40%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
 
-    /* HERO */
-    .hero {
-      height: 200px;
-      background: linear-gradient(to right, #131921, #232f3e);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+/* HERO */
+.hero {
+  height: 200px;
+  background: linear-gradient(to right, #131921, #232f3e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .hero img {
-      height: 120px;
-    }
+.hero img {
+  height: 120px;
+  border-radius: 50%;
+}
 
-    /* CAROUSEL */
-    .carousel img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-    }
+/* CAROUSEL FIX */
+.carousel {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background: #000;
+}
 
-    /* OFFERS */
-    .offers {
-      display: flex;
-      gap: 15px;
-      padding: 20px;
-    }
+.carousel img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 🔥 FIXED */
+}
 
-    .offer-card {
-      flex: 1;
-      background: white;
-      padding: 15px;
-      text-align: center;
-      border-radius: 10px;
-      transition: 0.3s;
-    }
+/* OFFERS IMPROVED */
+.offers {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
 
-    .offer-card:hover {
-      transform: scale(1.05);
-    }
+.offer-card {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
 
-    /* CATEGORY */
-    .categories {
-      text-align: center;
-      padding: 10px;
-    }
+.offer-card:hover {
+  transform: translateY(-5px);
+}
 
-    .categories button {
-      margin: 5px;
-      padding: 8px 15px;
-      cursor: pointer;
-    }
+/* CATEGORY */
+.categories {
+  text-align: center;
+  padding: 10px;
+}
 
-    /* PRODUCTS */
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-      gap: 20px;
-      padding: 20px;
-    }
+.categories button {
+  background: orange;
+  margin: 5px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
 
-    .card {
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      transition: 0.3s;
-    }
+/* PRODUCTS */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+  padding: 20px;
+}
 
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px gray;
-    }
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  transition: 0.3s;
+}
 
-    .card img {
-      height: 150px;
-    }
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px gray;
+}
 
-    button {
-      background: orange;
-      border: none;
-      padding: 8px;
-      cursor: pointer;
-    }
+.card img {
+  height: 150px;
+  object-fit: contain;
+}
 
-  </style>
+button {
+  background: orange;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+</style>
 </head>
 
 <body>
@@ -124,9 +139,7 @@
 <!-- NAVBAR -->
 <div class="header">
   <div class="logo"><img src="logo.png"></div>
-
   <input id="searchInput" placeholder="Search..." onkeyup="searchProducts()">
-
   <div>
     <button onclick="login()">Login</button>
     🛒 <span id="cartCount">0</span>
@@ -163,7 +176,7 @@
 
 <script>
 
-// 🔥 FULL PRODUCT LIST
+// FULL PRODUCTS
 let products = [
   {name:"Lipstick",price:599,img:"lipstick.png",category:"makeup"},
   {name:"Kajal",price:299,img:"kajal.png",category:"makeup"},
@@ -223,12 +236,12 @@ function filterCategory(cat){
   }
 }
 
-// CART + LOGIN
-let cart = [];
-let loggedIn = false;
+// CART
+let cart=[];
+let loggedIn=false;
 
 function login(){
-  loggedIn = true;
+  loggedIn=true;
   alert("Logged in!");
 }
 
@@ -241,8 +254,8 @@ function addToCart(name,price){
   document.getElementById("cartCount").innerText = cart.length;
 }
 
-// SLIDER
-let images = ["aloevera.png","facewash.png","lipstick.png"];
+// SLIDER FIXED
+let images=["aloevera.png","facewash.png","lipstick.png"];
 let i=0;
 
 setInterval(()=>{
