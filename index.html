@@ -5,89 +5,113 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
+/* 🌞 LIGHT + 🌙 DARK MODE */
 body{
   margin:0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #f7f8fc, #eef1f5);
+  font-family:Segoe UI;
+  background:#f3f3f3;
+  transition:0.3s;
 }
 
-/* NAVBAR */
+.dark{
+  background:#121212;
+  color:white;
+}
+
+/* NAVBAR (UNCHANGED STRUCTURE) */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:12px 25px;
-  background: rgba(19,25,33,0.95);
-  backdrop-filter: blur(10px);
+  background:#131921;
   color:white;
-  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  padding:10px 20px;
 }
 
 .logo img{
   height:55px;
   border-radius:50%;
   cursor:pointer;
-  transition:0.3s;
 }
-.logo img:hover{transform:scale(1.1);}
 
 #searchInput{
   width:40%;
-  padding:10px 15px;
-  border-radius:20px;
+  padding:10px;
+  border-radius:6px;
   border:none;
-  outline:none;
-  background:#f0f0f0;
-}
-#searchInput:focus{
-  background:white;
-  box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 /* GRID */
 .products{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:20px;
-  padding:25px;
+  gap:15px;
+  padding:20px;
 }
 
 /* CARD */
 .card{
   background:white;
-  padding:12px;
-  border-radius:12px;
-  transition:0.3s;
+  padding:10px;
+  border-radius:10px;
   cursor:pointer;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  transition:0.3s;
+  position:relative;
 }
 .card:hover{
-  transform:translateY(-6px) scale(1.03);
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  transform:scale(1.05);
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
+
+.dark .card{
+  background:#1e1e1e;
+}
+
 .card img{
   width:100%;
   height:140px;
   object-fit:contain;
 }
-.card h4{margin:5px 0}
-.price{color:#e63946;font-weight:bold}
 
-/* BUTTON */
-button{
-  background: linear-gradient(135deg,#ffb703,#fb8500);
-  border:none;
-  padding:8px;
-  border-radius:8px;
+.price{color:red}
+
+/* ⭐ RATING */
+.stars{
+  color:gold;
+}
+
+/* ❤️ WISHLIST */
+.wishlist{
+  position:absolute;
+  top:8px;
+  right:8px;
   cursor:pointer;
-  color:white;
+  font-size:18px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  left:0;
+  top:60px;
+  width:150px;
+  background:#fff;
+  height:100%;
+  padding:10px;
+  box-shadow:2px 0 10px rgba(0,0,0,0.2);
+}
+
+.dark .sidebar{
+  background:#1e1e1e;
 }
 
 /* MODAL */
 .modal{
   display:none;
   position:fixed;
-  top:0;left:0;width:100%;height:100%;
+  top:0;left:0;
+  width:100%;height:100%;
   background:rgba(0,0,0,0.6);
   justify-content:center;
   align-items:center;
@@ -95,8 +119,8 @@ button{
 
 .box{
   background:white;
-  padding:20px;
-  border-radius:12px;
+  padding:15px;
+  border-radius:10px;
   width:300px;
   text-align:center;
   position:relative;
@@ -105,7 +129,7 @@ button{
 .close{
   position:absolute;
   top:10px;
-  right:12px;
+  right:10px;
   cursor:pointer;
 }
 
@@ -114,21 +138,23 @@ button{
 .logo-circle{
   width:280px;height:280px;border-radius:50%;
   overflow:hidden;background:white;
-  box-shadow:0 0 25px gold,0 0 50px gold;
-  animation:zoomIn .5s;
 }
 .logo-close{
   position:absolute;
   top:-10px;right:-10px;
-  background:white;border-radius:50%;
-  padding:5px;cursor:pointer;
+  background:white;
+  border-radius:50%;
+  padding:5px;
+  cursor:pointer;
 }
-.premium-logo{width:100%;height:100%;object-fit:cover;}
 
-@keyframes zoomIn{
-  from{transform:scale(.5);opacity:0}
-  to{transform:scale(1);opacity:1}
+button{
+  background:orange;
+  border:none;
+  padding:6px;
+  cursor:pointer;
 }
+
 </style>
 </head>
 
@@ -142,6 +168,7 @@ button{
 <input id="searchInput" placeholder="Search..." onkeyup="searchProducts()">
 
 <div>
+<button onclick="toggleDark()">🌙</button>
 <button onclick="openSignup()">Signup</button>
 <button onclick="openLogin()">Login</button>
 <button onclick="logout()">Logout</button>
@@ -150,202 +177,88 @@ button{
 </div>
 </div>
 
+<!-- SIDEBAR FILTER -->
+<div class="sidebar">
+<h4>Filter</h4>
+<button onclick="filterPrice(500)">Under 500</button>
+<button onclick="filterPrice(1000)">Under 1000</button>
+<button onclick="showProducts(products)">All</button>
+</div>
+
 <div class="products" id="productList"></div>
 
 <!-- LOGO -->
 <div class="modal" id="logoModal">
 <div class="logo-wrapper">
 <div class="logo-circle">
-<img src="logo.png" class="premium-logo">
+<img src="logo.png" style="width:100%">
 </div>
 <span class="logo-close" onclick="closeAll()">❌</span>
 </div>
 </div>
 
-<!-- PRODUCT -->
-<div class="modal" id="productModal">
-<div class="box">
-<span class="close" onclick="closeAll()">❌</span>
-<img id="pimg" style="height:120px">
-<h3 id="pname"></h3>
-<p id="pprice"></p>
-<button onclick="addFromPopup()">Add</button>
-</div>
-</div>
-
-<!-- LOGIN -->
-<div class="modal" id="loginModal">
-<div class="box">
-<span class="close" onclick="closeAll()">❌</span>
-<input id="luser" placeholder="Username">
-<input id="lpass" type="password">
-<button onclick="login()">Login</button>
-</div>
-</div>
-
-<!-- SIGNUP -->
-<div class="modal" id="signupModal">
-<div class="box">
-<span class="close" onclick="closeAll()">❌</span>
-<input id="suser">
-<input id="spass" type="password">
-<button onclick="signup()">Signup</button>
-</div>
-</div>
-
-<!-- CART -->
-<div class="modal" id="cartModal">
-<div class="box">
-<span class="close" onclick="closeAll()">❌</span>
-<div id="cartItems"></div>
-<p>Total ₹<span id="total">0</span></p>
-<button onclick="checkout()">Checkout</button>
-</div>
-</div>
-
-<!-- ORDERS -->
-<div class="modal" id="ordersModal">
-<div class="box">
-<span class="close" onclick="closeAll()">❌</span>
-<div id="orders"></div>
-</div>
-</div>
-
 <script>
 
-let users=JSON.parse(localStorage.getItem("users"))||{};
-let currentUser=localStorage.getItem("currentUser");
-let selectedProduct=null;
-
+// DATA
 let products=[
-{name:"Lipstick",price:599,img:"lipstick.png"},
-{name:"Kajal",price:299,img:"kajal.png"},
-{name:"Foundation",price:799,img:"foundation.png"},
-{name:"Compact",price:399,img:"compact.png"},
-{name:"Eyeshadow",price:465,img:"eyeshadow.png"},
-{name:"Eyeliner",price:299,img:"eyeliner.png"},
-{name:"Concealer",price:349,img:"concealer.png"},
-{name:"Nail Polish",price:199,img:"nailpolish.png"},
-{name:"Face Cream",price:499,img:"facecream.png"},
-{name:"Face Wash",price:326,img:"facewash.png"},
-{name:"Face Serum",price:465,img:"faceserum.png"},
-{name:"Moisturizer",price:599,img:"moisturizer.png"},
-{name:"Body Wash",price:699,img:"bodywash.png"},
-{name:"Aloe Vera",price:299,img:"aloevera.png"},
-{name:"Hair Serum",price:549,img:"hairserum.png"},
-{name:"Shampoo",price:399,img:"shampoo.png"},
-{name:"Conditioner",price:449,img:"conditioner.png"},
-{name:"Hair Spray",price:599,img:"hairspray.png"}
+{name:"Lipstick",price:599,img:"lipstick.png",rating:4},
+{name:"Kajal",price:299,img:"kajal.png",rating:5},
+{name:"Foundation",price:799,img:"foundation.png",rating:3},
+{name:"Compact",price:399,img:"compact.png",rating:4},
+{name:"Face Wash",price:326,img:"facewash.png",rating:5}
 ];
 
+let users={},currentUser=null;
+
+// DISPLAY
 function showProducts(data){
 productList.innerHTML="";
-if(data.length===0){
-productList.innerHTML="<h3>No products found</h3>";
-return;
-}
 data.forEach(p=>{
 productList.innerHTML+=`
 <div class="card" onclick="openProduct('${p.name}',${p.price},'${p.img}')">
+
+<div class="wishlist" onclick="event.stopPropagation();addWishlist('${p.name}')">❤️</div>
+
 <img src="${p.img}">
 <h4>${p.name}</h4>
+
+<div class="stars">${"⭐".repeat(p.rating)}</div>
+
 <p class="price">₹${p.price}</p>
+
 </div>`;
 });
 }
 showProducts(products);
 
-/* SEARCH FIX */
+/* SEARCH */
 function searchProducts(){
-let v=searchInput.value.toLowerCase().trim();
-if(v===""){showProducts(products);return;}
-let filtered=products.filter(p=>p.name.toLowerCase().includes(v));
-showProducts(filtered);
+let v=searchInput.value.toLowerCase();
+showProducts(products.filter(p=>p.name.toLowerCase().includes(v)));
 }
 
-function openProduct(name,price,img){
-selectedProduct={name,price};
-pimg.src=img;
-pname.innerText=name;
-pprice.innerText="₹"+price;
-productModal.style.display="flex";
+/* FILTER */
+function filterPrice(price){
+showProducts(products.filter(p=>p.price<=price));
 }
 
-function addFromPopup(){
-addToCart(selectedProduct.name,selectedProduct.price);
+/* DARK MODE */
+function toggleDark(){
+document.body.classList.toggle("dark");
 }
 
+/* WISHLIST */
+function addWishlist(name){
+alert(name+" added to wishlist ❤️");
+}
+
+/* LOGO */
 function openLogo(){logoModal.style.display="flex";}
 
-function signup(){
-if(users[suser.value])return alert("User exists");
-users[suser.value]={pass:spass.value,cart:[],orders:[]};
-save();alert("Signup success");closeAll();
+/* MODAL CLOSE */
+function closeAll(){
+document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
 }
-
-function login(){
-if(users[luser.value]&&users[luser.value].pass===lpass.value){
-currentUser=luser.value;
-localStorage.setItem("currentUser",currentUser);
-alert("Login success");closeAll();
-}else alert("Invalid");
-}
-
-function logout(){
-if(!currentUser){alert("No user logged in");return;}
-currentUser=null;
-localStorage.removeItem("currentUser");
-cartCount.innerText=0;
-alert("Logged out");
-}
-
-function addToCart(name,price){
-if(!currentUser)return alert("Login required");
-users[currentUser].cart.push({name,price});
-save();updateCart();
-}
-
-function updateCart(){
-if(!currentUser)return;
-cartCount.innerText=users[currentUser].cart.length;
-}
-
-function openCart(){
-if(!currentUser)return alert("Login required");
-cartModal.style.display="flex";
-let cart=users[currentUser].cart;
-cartItems.innerHTML="";
-let total=0;
-cart.forEach(c=>{
-total+=c.price;
-cartItems.innerHTML+=`<p>${c.name} ₹${c.price}</p>`;
-});
-document.getElementById("total").innerText=total;
-}
-
-function checkout(){
-users[currentUser].orders.push([...users[currentUser].cart]);
-users[currentUser].cart=[];
-save();updateCart();
-alert("Payment successful");closeAll();
-}
-
-function openOrders(){
-if(!currentUser)return alert("Login required");
-ordersModal.style.display="flex";
-orders.innerHTML="";
-users[currentUser].orders.forEach(o=>{
-orders.innerHTML+=`<p>${o.map(i=>i.name).join(", ")}</p>`;
-});
-}
-
-function save(){localStorage.setItem("users",JSON.stringify(users));}
-
-function openLogin(){loginModal.style.display="flex";}
-function openSignup(){signupModal.style.display="flex";}
-function closeAll(){document.querySelectorAll(".modal").forEach(m=>m.style.display="none");}
-
-updateCart();
 
 </script>
 
