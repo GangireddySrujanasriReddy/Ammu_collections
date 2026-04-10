@@ -5,86 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#f3f3f3}
+body{
+  margin:0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #f7f8fc, #eef1f5);
+}
 
 /* NAVBAR */
 .header{
-display:flex;justify-content:space-between;align-items:center;
-background:#131921;color:white;padding:10px 20px
-}
-.logo img{
-height:55px;border-radius:50%;cursor:pointer
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 25px;
+  background: rgba(19,25,33,0.95);
+  backdrop-filter: blur(10px);
+  color:white;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
 }
 
+.logo img{
+  height:55px;
+  border-radius:50%;
+  cursor:pointer;
+  transition:0.3s;
+}
+.logo img:hover{transform:scale(1.1);}
+
 #searchInput{
-width:40%;padding:10px;border-radius:6px;border:none
+  width:40%;
+  padding:10px 15px;
+  border-radius:20px;
+  border:none;
+  outline:none;
+  background:#f0f0f0;
+}
+#searchInput:focus{
+  background:white;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 /* GRID */
 .products{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:15px;padding:20px
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:20px;
+  padding:25px;
 }
 
 /* CARD */
 .card{
-background:white;padding:10px;border-radius:8px;
-transition:.3s;cursor:pointer
+  background:white;
+  padding:12px;
+  border-radius:12px;
+  transition:0.3s;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
 }
-.card:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(0,0,0,.3)}
-.card img{width:100%;height:140px;object-fit:contain}
+.card:hover{
+  transform:translateY(-6px) scale(1.03);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+.card img{
+  width:100%;
+  height:140px;
+  object-fit:contain;
+}
+.card h4{margin:5px 0}
+.price{color:#e63946;font-weight:bold}
 
-.price{color:#B12704;font-weight:bold}
+/* BUTTON */
+button{
+  background: linear-gradient(135deg,#ffb703,#fb8500);
+  border:none;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+  color:white;
+}
 
 /* MODAL */
 .modal{
-display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-background:rgba(0,0,0,.6);
-justify-content:center;align-items:center
+  display:none;
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
 }
 
 .box{
-background:white;padding:15px;border-radius:10px;
-width:300px;position:relative;text-align:center
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  text-align:center;
+  position:relative;
 }
 
 .close{
-position:absolute;top:8px;right:10px;font-size:18px;cursor:pointer
+  position:absolute;
+  top:10px;
+  right:12px;
+  cursor:pointer;
 }
 
 /* LOGO */
 .logo-wrapper{position:relative;display:flex;justify-content:center}
-
 .logo-circle{
-width:280px;height:280px;border-radius:50%;
-overflow:hidden;background:white;
-
-box-shadow:
-0 0 25px rgba(255,215,0,0.7),
-0 0 50px rgba(255,215,0,0.5),
-0 0 80px rgba(255,215,0,0.3);
-
-animation:zoomIn .5s ease;
+  width:280px;height:280px;border-radius:50%;
+  overflow:hidden;background:white;
+  box-shadow:0 0 25px gold,0 0 50px gold;
+  animation:zoomIn .5s;
 }
-
 .logo-close{
-position:absolute;top:-10px;right:-10px;
-background:white;border-radius:50%;
-padding:5px;cursor:pointer
+  position:absolute;
+  top:-10px;right:-10px;
+  background:white;border-radius:50%;
+  padding:5px;cursor:pointer;
 }
-
-.premium-logo{
-width:100%;height:100%;object-fit:cover;
-}
+.premium-logo{width:100%;height:100%;object-fit:cover;}
 
 @keyframes zoomIn{
-from{transform:scale(.5);opacity:0}
-to{transform:scale(1);opacity:1}
-}
-
-button{
-background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
+  from{transform:scale(.5);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 </style>
 </head>
@@ -96,7 +139,7 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 <img src="logo.png" onclick="openLogo()">
 </div>
 
-<input id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
+<input id="searchInput" placeholder="Search..." onkeyup="searchProducts()">
 
 <div>
 <button onclick="openSignup()">Signup</button>
@@ -119,14 +162,14 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 </div>
 </div>
 
-<!-- PRODUCT POPUP -->
+<!-- PRODUCT -->
 <div class="modal" id="productModal">
 <div class="box">
 <span class="close" onclick="closeAll()">❌</span>
 <img id="pimg" style="height:120px">
 <h3 id="pname"></h3>
 <p id="pprice"></p>
-<button onclick="addFromPopup()">Add to Cart</button>
+<button onclick="addFromPopup()">Add</button>
 </div>
 </div>
 
@@ -174,31 +217,31 @@ let users=JSON.parse(localStorage.getItem("users"))||{};
 let currentUser=localStorage.getItem("currentUser");
 let selectedProduct=null;
 
-let products=[...[
-["Lipstick",599,"lipstick.png"],
-["Kajal",299,"kajal.png"],
-["Foundation",799,"foundation.png"],
-["Compact",399,"compact.png"],
-["Eyeshadow",465,"eyeshadow.png"],
-["Eyeliner",299,"eyeliner.png"],
-["Concealer",349,"concealer.png"],
-["Nail Polish",199,"nailpolish.png"],
-["Face Cream",499,"facecream.png"],
-["Face Wash",326,"facewash.png"],
-["Face Serum",465,"faceserum.png"],
-["Moisturizer",599,"moisturizer.png"],
-["Body Wash",699,"bodywash.png"],
-["Aloe Vera",299,"aloevera.png"],
-["Hair Serum",549,"hairserum.png"],
-["Shampoo",399,"shampoo.png"],
-["Conditioner",449,"conditioner.png"],
-["Hair Spray",599,"hairspray.png"]
-]].map(p=>({name:p[0],price:p[1],img:p[2]}))
+let products=[
+{name:"Lipstick",price:599,img:"lipstick.png"},
+{name:"Kajal",price:299,img:"kajal.png"},
+{name:"Foundation",price:799,img:"foundation.png"},
+{name:"Compact",price:399,img:"compact.png"},
+{name:"Eyeshadow",price:465,img:"eyeshadow.png"},
+{name:"Eyeliner",price:299,img:"eyeliner.png"},
+{name:"Concealer",price:349,img:"concealer.png"},
+{name:"Nail Polish",price:199,img:"nailpolish.png"},
+{name:"Face Cream",price:499,img:"facecream.png"},
+{name:"Face Wash",price:326,img:"facewash.png"},
+{name:"Face Serum",price:465,img:"faceserum.png"},
+{name:"Moisturizer",price:599,img:"moisturizer.png"},
+{name:"Body Wash",price:699,img:"bodywash.png"},
+{name:"Aloe Vera",price:299,img:"aloevera.png"},
+{name:"Hair Serum",price:549,img:"hairserum.png"},
+{name:"Shampoo",price:399,img:"shampoo.png"},
+{name:"Conditioner",price:449,img:"conditioner.png"},
+{name:"Hair Spray",price:599,img:"hairspray.png"}
+];
 
 function showProducts(data){
 productList.innerHTML="";
 if(data.length===0){
-productList.innerHTML="<h3 style='padding:20px'>No products found</h3>";
+productList.innerHTML="<h3>No products found</h3>";
 return;
 }
 data.forEach(p=>{
@@ -212,21 +255,13 @@ productList.innerHTML+=`
 }
 showProducts(products);
 
-/* 🔥 FIXED SEARCH */
+/* SEARCH FIX */
 function searchProducts(){
-let value=document.getElementById("searchInput").value.toLowerCase().trim();
-
-if(value===""){
-showProducts(products);
-return;
-}
-
-let filtered=products.filter(p=>p.name.toLowerCase().includes(value));
-
+let v=searchInput.value.toLowerCase().trim();
+if(v===""){showProducts(products);return;}
+let filtered=products.filter(p=>p.name.toLowerCase().includes(v));
 showProducts(filtered);
 }
-
-// rest same...
 
 function openProduct(name,price,img){
 selectedProduct={name,price};
@@ -236,7 +271,9 @@ pprice.innerText="₹"+price;
 productModal.style.display="flex";
 }
 
-function addFromPopup(){addToCart(selectedProduct.name,selectedProduct.price);}
+function addFromPopup(){
+addToCart(selectedProduct.name,selectedProduct.price);
+}
 
 function openLogo(){logoModal.style.display="flex";}
 
@@ -264,7 +301,7 @@ alert("Logged out");
 
 function addToCart(name,price){
 if(!currentUser)return alert("Login required");
-users[currentUser].cart.push({name,price,qty:1});
+users[currentUser].cart.push({name,price});
 save();updateCart();
 }
 
