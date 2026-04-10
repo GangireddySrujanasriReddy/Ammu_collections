@@ -36,8 +36,6 @@ transition:.3s;cursor:pointer
 .card img{width:100%;height:140px;object-fit:contain}
 
 .price{color:#B12704;font-weight:bold}
-.rating{color:orange;font-size:14px}
-.badge{background:red;color:white;font-size:11px;padding:2px 5px}
 
 /* MODAL */
 .modal{
@@ -46,28 +44,42 @@ background:rgba(0,0,0,.6);
 justify-content:center;align-items:center
 }
 
+/* PRODUCT POPUP SMALL */
 .box{
-background:white;padding:20px;border-radius:10px;
-width:90%;max-width:500px;position:relative;text-align:center
+background:white;padding:15px;border-radius:10px;
+width:300px;
+position:relative;text-align:center
 }
 
 .close{
-position:absolute;top:10px;right:15px;font-size:20px;cursor:pointer
+position:absolute;top:8px;right:10px;font-size:18px;cursor:pointer
 }
 
-/* 🔥 PREMIUM LOGO BIGGER */
+/* 🔥 PREMIUM LOGO */
 .logo-circle{
 width:280px;height:280px;border-radius:50%;
 overflow:hidden;background:white;
 display:flex;justify-content:center;align-items:center;
-margin:auto;
+position:relative;
 
+/* glow */
 box-shadow:
 0 0 25px rgba(255,215,0,0.7),
 0 0 50px rgba(255,215,0,0.5),
 0 0 80px rgba(255,215,0,0.3);
 
-animation:zoomIn 0.5s ease;
+/* animation */
+animation:zoomIn .5s ease;
+}
+
+.logo-close{
+position:absolute;
+top:10px;
+right:10px;
+background:white;
+border-radius:50%;
+padding:4px;
+cursor:pointer;
 }
 
 .premium-logo{
@@ -75,7 +87,7 @@ width:100%;height:100%;object-fit:cover;
 }
 
 @keyframes zoomIn{
-from{transform:scale(0.5);opacity:0}
+from{transform:scale(.5);opacity:0}
 to{transform:scale(1);opacity:1}
 }
 
@@ -115,7 +127,7 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 <!-- LOGO POPUP -->
 <div class="modal" id="logoModal">
 <div class="logo-circle">
-<span class="close" onclick="closeAll()">❌</span>
+<span class="logo-close" onclick="closeAll()">❌</span>
 <img src="logo.png" class="premium-logo">
 </div>
 </div>
@@ -124,7 +136,7 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 <div class="modal" id="productModal">
 <div class="box">
 <span class="close" onclick="closeAll()">❌</span>
-<img id="pimg" style="height:150px">
+<img id="pimg" style="height:120px">
 <h3 id="pname"></h3>
 <p id="pprice"></p>
 <button onclick="addFromPopup()">Add to Cart</button>
@@ -181,7 +193,7 @@ let currentUser=localStorage.getItem("currentUser");
 let selectedProduct=null;
 
 // PRODUCTS
-let products=[ ...[
+let products=[...[
 ["Lipstick",599,"lipstick.png"],
 ["Kajal",299,"kajal.png"],
 ["Foundation",799,"foundation.png"],
@@ -255,7 +267,7 @@ cartCount.innerText=0;
 alert("Logged out");
 }
 
-// CART
+// CART + ORDERS (same as before)
 function addToCart(name,price){
 if(!currentUser)return alert("Login required");
 users[currentUser].cart.push({name,price,qty:1});
@@ -267,19 +279,46 @@ if(!currentUser)return;
 cartCount.innerText=users[currentUser].cart.length;
 }
 
-// ORDERS + CART same as before...
+function openCart(){
+if(!currentUser)return alert("Login required");
+cartModal.style.display="flex";
+let cart=users[currentUser].cart;
+cartItems.innerHTML="";
+let total=0;
+cart.forEach((c,i)=>{
+total+=c.price*c.qty;
+cartItems.innerHTML+=`<p>${c.name} ₹${c.price}</p>`;
+});
+total.innerText=total;
+}
+
+function checkout(){
+users[currentUser].orders.push([...users[currentUser].cart]);
+users[currentUser].cart=[];
+save();updateCart();
+alert("Payment successful");closeAll();
+}
+
+function openOrders(){
+if(!currentUser)return alert("Login required");
+ordersModal.style.display="flex";
+orders.innerHTML="";
+users[currentUser].orders.forEach(o=>{
+orders.innerHTML+=`<p>${o.map(i=>i.name).join(", ")}</p>`;
+});
+}
 
 function save(){
 localStorage.setItem("users",JSON.stringify(users));
 }
 
-function closeAll(){
-document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
-}
+function openLogin(){loginModal.style.display="flex";}
+function openSignup(){signupModal.style.display="flex";}
+function closeAll(){document.querySelectorAll(".modal").forEach(m=>m.style.display="none");}
 
 updateCart();
 
 </script>
 
 </body>
-</html>s
+</html>
