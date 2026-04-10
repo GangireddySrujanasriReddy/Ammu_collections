@@ -32,7 +32,7 @@ gap:15px;padding:20px
 background:white;padding:10px;border-radius:8px;
 transition:.3s
 }
-.card:hover{transform:scale(1.03);box-shadow:0 5px 15px rgba(0,0,0,.2)}
+.card:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(0,0,0,.3)}
 .card img{width:100%;height:140px;object-fit:contain}
 
 .price{color:#B12704;font-weight:bold}
@@ -46,6 +46,7 @@ background:rgba(0,0,0,.6);
 justify-content:center;align-items:center
 }
 
+/* BOX */
 .box{
 background:white;padding:20px;border-radius:10px;
 width:90%;max-width:500px;position:relative;text-align:center
@@ -55,10 +56,32 @@ width:90%;max-width:500px;position:relative;text-align:center
 position:absolute;top:10px;right:15px;font-size:18px;cursor:pointer
 }
 
-/* LOGO */
-.big-logo{
+/* 🔥 PREMIUM LOGO */
+.logo-wrapper{text-align:center;position:relative}
+
+.logo-circle{
 width:220px;height:220px;border-radius:50%;
-object-fit:cover
+overflow:hidden;background:white;
+display:flex;justify-content:center;align-items:center;
+margin:auto;
+
+/* glow */
+box-shadow:
+0 0 20px rgba(255,215,0,0.6),
+0 0 40px rgba(255,215,0,0.4),
+0 0 60px rgba(255,215,0,0.2);
+
+/* animation */
+animation:zoomIn 0.5s ease;
+}
+
+.premium-logo{
+width:100%;height:100%;object-fit:cover;
+}
+
+@keyframes zoomIn{
+from{transform:scale(0.5);opacity:0}
+to{transform:scale(1);opacity:1}
 }
 
 input{
@@ -94,11 +117,13 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 <!-- PRODUCTS -->
 <div class="products" id="productList"></div>
 
-<!-- LOGO POPUP -->
+<!-- 🔥 LOGO POPUP -->
 <div class="modal" id="logoModal">
-<div class="box">
+<div class="logo-wrapper">
 <span class="close" onclick="closeAll()">❌</span>
-<img src="logo.png" class="big-logo">
+<div class="logo-circle">
+<img src="logo.png" class="premium-logo">
+</div>
 </div>
 </div>
 
@@ -118,7 +143,7 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 <div class="box">
 <span class="close" onclick="closeAll()">❌</span>
 <h3>Signup</h3>
-<input id="suser" placeholder="Username">
+<input id="suser">
 <input id="spass" type="password">
 <button onclick="signup()">Signup</button>
 </div>
@@ -147,11 +172,11 @@ background:#ffd814;border:none;padding:8px;margin-top:5px;cursor:pointer
 <script>
 
 // STORAGE
-let users = JSON.parse(localStorage.getItem("users")) || {};
-let currentUser = localStorage.getItem("currentUser");
+let users=JSON.parse(localStorage.getItem("users"))||{};
+let currentUser=localStorage.getItem("currentUser");
 
-// FULL PRODUCTS
-let products = [
+// PRODUCTS (FULL)
+let products=[
 {name:"Lipstick",price:599,img:"lipstick.png"},
 {name:"Kajal",price:299,img:"kajal.png"},
 {name:"Foundation",price:799,img:"foundation.png"},
@@ -165,7 +190,7 @@ let products = [
 {name:"Face Serum",price:465,img:"faceserum.png"},
 {name:"Moisturizer",price:599,img:"moisturizer.png"},
 {name:"Body Wash",price:699,img:"bodywash.png"},
-{name:"Aloe Vera Gel",price:299,img:"aloevera.png"},
+{name:"Aloe Vera",price:299,img:"aloevera.png"},
 {name:"Hair Serum",price:549,img:"hairserum.png"},
 {name:"Shampoo",price:399,img:"shampoo.png"},
 {name:"Conditioner",price:449,img:"conditioner.png"},
@@ -202,40 +227,46 @@ logoModal.style.display="flex";
 
 // AUTH
 function signup(){
-if(!suser.value||!spass.value)return alert("Fill all fields");
+if(!suser.value||!spass.value)return alert("Fill all");
 if(users[suser.value])return alert("User exists");
 users[suser.value]={pass:spass.value,cart:[],orders:[]};
 save();alert("Signup success");closeAll();
 }
 
 function login(){
-if(users[luser.value] && users[luser.value].pass===lpass.value){
+if(users[luser.value]&&users[luser.value].pass===lpass.value){
 currentUser=luser.value;
 localStorage.setItem("currentUser",currentUser);
 alert("Login success");closeAll();
 }else alert("Invalid credentials");
 }
 
+/* 🔥 FIXED LOGOUT */
 function logout(){
+if(!currentUser){
+alert("No user logged in");
+return;
+}
 currentUser=null;
 localStorage.removeItem("currentUser");
-alert("Logged out");
+cartCount.innerText=0;
+alert("Logged out successfully");
 }
 
 // CART
 function addToCart(name,price){
-if(!currentUser) return alert("Login required");
+if(!currentUser)return alert("Login required");
 users[currentUser].cart.push({name,price,qty:1});
 save();updateCart();
 }
 
 function updateCart(){
-if(!currentUser) return;
+if(!currentUser)return;
 cartCount.innerText=users[currentUser].cart.length;
 }
 
 function openCart(){
-if(!currentUser) return alert("Login required");
+if(!currentUser)return alert("Login required");
 
 cartModal.style.display="flex";
 let cart=users[currentUser].cart;
@@ -269,8 +300,7 @@ alert("Payment successful");closeAll();
 
 // ORDERS
 function openOrders(){
-if(!currentUser) return alert("Login required");
-
+if(!currentUser)return alert("Login required");
 ordersModal.style.display="flex";
 orders.innerHTML="";
 users[currentUser].orders.forEach(o=>{
@@ -286,9 +316,7 @@ localStorage.setItem("users",JSON.stringify(users));
 // MODALS
 function openLogin(){loginModal.style.display="flex";}
 function openSignup(){signupModal.style.display="flex";}
-function closeAll(){
-document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
-}
+function closeAll(){document.querySelectorAll(".modal").forEach(m=>m.style.display="none");}
 
 updateCart();
 
