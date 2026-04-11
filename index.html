@@ -5,166 +5,92 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:Segoe UI;
-  background:#f3f3f3;
-}
+body{margin:0;font-family:Segoe UI;background:#f3f3f3}
 
 /* NAVBAR */
 .header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#131921;
-color:white;
-padding:10px 20px;
+display:flex;justify-content:space-between;align-items:center;
+background:#131921;color:white;padding:10px 20px
 }
-
-.logo img{
-height:55px;
-border-radius:50%;
-cursor:pointer;
-}
+.logo img{height:55px;border-radius:50%;cursor:pointer}
 
 #searchInput{
-width:40%;
-padding:10px;
-border-radius:6px;
-border:none;
+width:40%;padding:10px;border-radius:6px;border:none
 }
 
 /* GRID */
 .products{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:15px;
-padding:20px;
+gap:15px;padding:20px
 }
 
 /* CARD */
 .card{
-background:white;
-padding:10px;
-border-radius:10px;
-cursor:pointer;
-position:relative;
-transition:.3s;
+background:white;padding:10px;border-radius:10px;
+cursor:pointer;position:relative;transition:.3s
 }
-
 .card:hover{
 transform:scale(1.05);
-box-shadow:0 5px 20px rgba(0,0,0,.3);
+box-shadow:0 5px 20px rgba(0,0,0,.3)
 }
 
-.card img{
-width:100%;
-height:140px;
-object-fit:contain;
-}
-
+.card img{width:100%;height:140px;object-fit:contain}
 .price{color:red}
 .stars{color:gold}
 
 /* WISHLIST */
 .wishlist{
-position:absolute;
-top:8px;
-right:8px;
-cursor:pointer;
+position:absolute;top:8px;right:8px;cursor:pointer
 }
 
 /* BUTTON */
 button{
-background:orange;
-border:none;
-padding:8px 12px;
-cursor:pointer;
-margin-top:8px;
-border-radius:5px;
+background:orange;border:none;padding:8px;cursor:pointer;margin-top:5px;border-radius:5px
 }
 
 /* MODAL */
 .modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.6);
-justify-content:center;
-align-items:center;
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,.6);justify-content:center;align-items:center
 }
 
-/* BOX */
 .box{
-background:white;
-padding:25px;
-border-radius:12px;
-width:320px;
-text-align:center;
-position:relative;
+background:white;padding:20px;border-radius:12px;width:320px;
+text-align:center;position:relative
 }
 
-/* FIXED INPUT ALIGNMENT */
 .box input{
-width:90%;
-padding:10px;
-margin:10px 0;
-border-radius:5px;
-border:1px solid #ccc;
+width:90%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #ccc
 }
 
-/* CLOSE */
 .close{
-position:absolute;
-top:10px;
-right:15px;
-font-size:20px;
-cursor:pointer;
+position:absolute;top:10px;right:15px;font-size:20px;cursor:pointer
 }
 
-/* LOGO MODAL */
+/* LOGO */
 .logo-wrapper{
-position:relative;
-display:flex;
-justify-content:center;
-align-items:center;
+position:relative;display:flex;justify-content:center;align-items:center
 }
 
 .logo-circle{
-width:250px;
-height:250px;
-border-radius:50%;
-overflow:hidden;
-background:white;
-display:flex;
-justify-content:center;
-align-items:center;
+width:250px;height:250px;border-radius:50%;
+overflow:hidden;background:white
 }
 
 .logo-close{
-position:absolute;
-top:-10px;
-right:-10px;
-background:white;
-border-radius:50%;
-padding:5px;
-cursor:pointer;
+position:absolute;top:-10px;right:-10px;
+background:white;border-radius:50%;padding:5px;cursor:pointer
 }
 
 .premium-logo{
-width:100%;
-height:100%;
-object-fit:cover;
+width:100%;height:100%;object-fit:cover;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <div class="header">
 <div class="logo">
 <img src="logo.png" onclick="openLogo()">
@@ -180,10 +106,9 @@ object-fit:cover;
 </div>
 </div>
 
-<!-- PRODUCTS -->
 <div class="products" id="productList"></div>
 
-<!-- LOGO POPUP -->
+<!-- LOGO -->
 <div class="modal" id="logoModal">
 <div class="logo-wrapper">
 <div class="logo-circle">
@@ -231,13 +156,26 @@ object-fit:cover;
 let users=JSON.parse(localStorage.getItem("users"))||{};
 let currentUser=localStorage.getItem("currentUser");
 
-// PRODUCTS
+/* 🔥 FULL PRODUCT LIST RESTORED */
 let products=[
 {name:"Lipstick",price:599,img:"lipstick.png",rating:4},
 {name:"Kajal",price:299,img:"kajal.png",rating:5},
 {name:"Foundation",price:799,img:"foundation.png",rating:3},
 {name:"Compact",price:399,img:"compact.png",rating:4},
-{name:"Face Wash",price:326,img:"facewash.png",rating:5}
+{name:"Eyeshadow",price:465,img:"eyeshadow.png",rating:4},
+{name:"Eyeliner",price:299,img:"eyeliner.png",rating:5},
+{name:"Concealer",price:349,img:"concealer.png",rating:3},
+{name:"Nail Polish",price:199,img:"nailpolish.png",rating:4},
+{name:"Face Cream",price:499,img:"facecream.png",rating:5},
+{name:"Face Wash",price:326,img:"facewash.png",rating:5},
+{name:"Face Serum",price:465,img:"faceserum.png",rating:4},
+{name:"Moisturizer",price:599,img:"moisturizer.png",rating:4},
+{name:"Body Wash",price:699,img:"bodywash.png",rating:3},
+{name:"Aloe Vera",price:299,img:"aloevera.png",rating:5},
+{name:"Hair Serum",price:549,img:"hairserum.png",rating:4},
+{name:"Shampoo",price:399,img:"shampoo.png",rating:4},
+{name:"Conditioner",price:449,img:"conditioner.png",rating:3},
+{name:"Hair Spray",price:599,img:"hairspray.png",rating:4}
 ];
 
 // DISPLAY
@@ -267,9 +205,7 @@ showProducts(products.filter(p=>p.name.toLowerCase().includes(v)));
 function signup(){
 if(users[suser.value]) return alert("User exists");
 users[suser.value]={pass:spass.value,cart:[],wishlist:[]};
-save();
-alert("Signup success");
-closeAll();
+save();alert("Signup success");closeAll();
 }
 
 function login(){
@@ -293,8 +229,7 @@ updateCart();
 function addToCart(name,price){
 if(!currentUser) return alert("Login required");
 users[currentUser].cart.push({name,price});
-save();
-updateCart();
+save();updateCart();
 }
 
 function updateCart(){
@@ -324,7 +259,7 @@ if(!currentUser) return alert("Login required");
 alert(name+" added ❤️");
 }
 
-// LOGO FIX
+// LOGO
 function openLogo(){
 document.getElementById("logoModal").style.display="flex";
 }
